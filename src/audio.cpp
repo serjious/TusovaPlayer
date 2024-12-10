@@ -97,12 +97,16 @@ void AudioPlayer::Add(const char* path)
         first = new Item;
         first->audio.Load(path);
         first->audio.SetVolume(volume);
+        first->next = NULL;
+        first->prev = NULL;
         last = first;
         cur = first;
     } else {
         Item* tmp = new Item;
         tmp->audio.Load(path);
         tmp->audio.SetVolume(volume);
+        tmp->next = NULL;
+        tmp->prev = NULL;
         last->next = tmp;
         tmp->prev = last;
         last = tmp;
