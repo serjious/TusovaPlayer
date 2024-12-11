@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+#include "../include/dirent_win32.h"
+#else
 #include <dirent.h>
+#endif
 
 const char* music_types[]{
     ".mp3",   ".MP3",
