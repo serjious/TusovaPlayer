@@ -6,8 +6,9 @@
 #else
 #include <dirent.h>
 #endif
+#include <dir_scan.h>
 
-const char* music_types[]{
+static const char* music_types[]{
     ".mp3",   ".MP3",
     ".wav",   ".WAV",
     ".ogg",   ".OGG",
@@ -29,7 +30,7 @@ static bool is_music(const char* name)
     return false;
 }
 
-static void rec_dir_scan(const char* dir_name)
+static void rec_dir_scan(const char* dir_name, AudioPlayer& obj)
 {
     dirent** namelist;
     dirent* entry;
@@ -38,17 +39,19 @@ static void rec_dir_scan(const char* dir_name)
         //error handling
         return;
     for(int i = 0; i < n; i++) {
+        char path[PATH_MAX];
         entry = namelist[i];
         if(entry->d_type & DT_DIR) {
             if(strcmp(entry->d_name, "..") != 0 &&
                strcmp(entry->d_name, ".") != 0) {
-                char path[PATH_MAX];
                 snprintf(path, PATH_MAX, "%s/%s", dir_name, entry->d_name);
-                rec_dir_scan(path); 
+                rec_dir_scan(path, obj); 
             }
         } else {
-            if(is_music(entry->d_name))
-                printf("%s/%s\n", dir_name, entry->d_name);
+            if(is_music(entry->d_name)) {
+                snprintf(path, PATH_MAX, "%s/%s", dir_name, entry->d_name);
+                obj.Add(path);
+            }
         }
         free(namelist[i]);
     }
@@ -56,23 +59,21 @@ static void rec_dir_scan(const char* dir_name)
     //errors handler
 }
 
-void dir_scan(const char* dir_name)
+void dir_scan(const char* path, AudioPlayer& obj)
 {
     char upd_dir_name[PATH_MAX]; 
-    strncpy(upd_dir_name, dir_name, PATH_MAX);
+    strncpy(upd_dir_name, path, PATH_MAX);
     // /home/user/ <- delete last slash
     for(char* tmp = upd_dir_name; *tmp; tmp++) {
         if(*(tmp+1) == '\0' && *tmp == '/')
             *tmp = '\0';
     }
-    rec_dir_scan(upd_dir_name);
+    rec_dir_scan(upd_dir_name, obj);
 }
 
-int main(int argc, char* argv[])
+bool is_directory(const char* path)
 {
-    if(argc < 1)
-        return 1;
-    //order_dir_scan(argv[1]);
-    dir_scan(argv[1]);
-    return 0;
+    DIR* dp = opendir(path);
+    closedir(dp);
+    return dp;
 }
