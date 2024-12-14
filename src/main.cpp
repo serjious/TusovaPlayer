@@ -11,9 +11,9 @@ int main(int argc, char* argv[])
         return 2;
 
     AudioPlayer a_pl;
-    for(int i = 1; i<argc; i++) {
-        if(argv[1] && (is_music(argv[1]) || is_directory(argv[1])))
-            a_pl.Add(argv[1]);
+    for(int i = 1; i < argc; i++) {
+        if(argv[i] && (is_music(argv[i]) || is_directory(argv[i])))
+            a_pl.Add(argv[i]);
     }
     
     if(a_pl.Len() == 0)

@@ -7,7 +7,8 @@ AudioPlayer::~AudioPlayer()
 	    Item* tmp = last;
 		last = tmp->prev;
 		delete tmp;
-	}
+    }
+    printf("deleted track's: %d\n", len);
 }
 
 void AudioPlayer::Add(const char* path)
