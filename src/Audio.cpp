@@ -67,6 +67,7 @@ int Audio::SetVolume(int volume)
     // -1 return currect volume
     if(volume >= -1 && volume <= MIX_MAX_VOLUME)
 		return Mix_VolumeMusic(volume);
+    return 0;
 }
 
 void Audio::SetPosition(double pos) 

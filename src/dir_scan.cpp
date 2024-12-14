@@ -6,7 +6,9 @@
 #else
 #include <dirent.h>
 #endif
-#include <dir_scan.h>
+#include "dir_scan.h"
+#include "AudioPlayer.h"
+
 
 static const char* music_types[]{
     ".mp3",   ".MP3",

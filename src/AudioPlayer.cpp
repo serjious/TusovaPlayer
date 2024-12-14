@@ -1,6 +1,8 @@
 #include "AudioPlayer.h"
 #include "dir_scan.h"
 
+void dir_scan(const char* path, AudioPlayer& obj);
+
 AudioPlayer::~AudioPlayer()
 {
 	while(last) {

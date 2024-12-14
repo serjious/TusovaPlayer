@@ -11,6 +11,7 @@ int main(int argc, char* argv[])
         return 2;
 
     AudioPlayer a_pl;
+    a_pl.Loop();
     for(int i = 1; i < argc; i++) {
         if(argv[i] && (is_music(argv[i]) || is_directory(argv[i])))
             a_pl.Add(argv[i]);
@@ -19,6 +20,7 @@ int main(int argc, char* argv[])
     if(a_pl.Len() == 0)
         return 3;
     
+    a_pl.Get().Play(); 
     
     int c;
     while((c = getchar()) != EOF) {
