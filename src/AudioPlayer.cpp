@@ -47,10 +47,11 @@ void AudioPlayer::SetVolume(int a_volume)
         tmp = tmp->next;
     }
     tmp = cur->prev;
-    while(tmp->prev) {
-        tmp->audio.SetVolume(a_volume);
-        tmp = tmp->prev;
-    }
+    if(tmp)
+        while(tmp->prev) {
+            tmp->audio.SetVolume(a_volume);
+            tmp = tmp->prev;
+        }
 }
 
 void AudioPlayer::Push(const char* path)
@@ -70,4 +71,5 @@ void AudioPlayer::Push(const char* path)
         last = tmp;
         last->next = 0;
     }
+    len++;
 }

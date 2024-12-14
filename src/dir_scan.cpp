@@ -16,18 +16,25 @@ static const char* music_types[]{
     ".opus",  ".OPUS"
 };
 
-static bool is_music(const char* name)
+bool is_music(const char* path)
 {
-    for( ; *name; name++) {
-        if(*name == '.') {
+    for( ; *path; path++) {
+        if(*path== '.') {
             int size_types = sizeof(music_types)/sizeof(*music_types);
             for(int i = 0; i < size_types; i++) {
-                if(strcmp(name, music_types[i]) == 0)
+                if(strcmp(path, music_types[i]) == 0)
                     return true;
             }
         }
     }
     return false;
+}
+
+bool is_directory(const char* path)
+{
+    DIR* dp = opendir(path);
+    closedir(dp);
+    return dp;
 }
 
 static void rec_dir_scan(const char* dir_name, AudioPlayer& obj)
@@ -71,9 +78,4 @@ void dir_scan(const char* path, AudioPlayer& obj)
     rec_dir_scan(upd_dir_name, obj);
 }
 
-bool is_directory(const char* path)
-{
-    DIR* dp = opendir(path);
-    closedir(dp);
-    return dp;
-}
+

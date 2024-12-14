@@ -5,6 +5,8 @@
 
 void dir_scan(const char* path, AudioPlayer& obj);
 
+bool is_music(const char* path);
+
 bool is_directory(const char* path);
 
 #endif

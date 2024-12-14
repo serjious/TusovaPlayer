@@ -15,6 +15,7 @@ class AudioPlayer {
     bool loop;
     bool end;
     int volume;
+    size_t len;
 public:
     AudioPlayer()
         : first(0)
@@ -23,6 +24,7 @@ public:
         , loop(0)
         , end(0)
         , volume(64)
+        , len(0)
     {}
     ~AudioPlayer();
     Audio& Get() { return cur->audio; }
@@ -33,6 +35,7 @@ public:
     void Loop()   { loop = true; }
     void Unloop() { loop = false; }
     bool IsLoop() { return loop; }
+    size_t Len()  { return len; }
 private:
     AudioPlayer(const AudioPlayer&) {}
     void operator=(const AudioPlayer&) {}
