@@ -27,5 +27,6 @@ public:
 };
 
 int init_audio();
+//static method mb
 
 #endif

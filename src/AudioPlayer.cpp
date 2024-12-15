@@ -1,7 +1,9 @@
+#include <SDL2/SDL_mixer.h>
 #include "AudioPlayer.h"
 #include "dir_scan.h"
 
 void dir_scan(const char* path, AudioPlayer& obj);
+void global_set_volume(int volume); 
 
 AudioPlayer::~AudioPlayer()
 {
@@ -17,8 +19,10 @@ void AudioPlayer::Add(const char* path)
 {
     if(is_directory(path)) {
 		dir_scan(path, *this);
-	} else 
+	} else if(is_music(path)) {
 		Push(path);
+    } else
+        throw "blya";
 }
     
 void AudioPlayer::Next()
@@ -44,6 +48,7 @@ void AudioPlayer::Prev()
 void AudioPlayer::SetVolume(int a_volume)
 {
     volume = a_volume;
+    /*
     Item* tmp = cur;
     while(tmp->next) {
         tmp->audio.SetVolume(a_volume);
@@ -55,6 +60,8 @@ void AudioPlayer::SetVolume(int a_volume)
             tmp->audio.SetVolume(a_volume);
             tmp = tmp->prev;
         }
+    */
+    global_set_volume(a_volume);
 }
 
 void AudioPlayer::Push(const char* path)

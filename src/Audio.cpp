@@ -22,6 +22,11 @@ int init_audio()
     return 0;
 }
 
+void global_set_volume(int volume)
+{
+    Mix_VolumeMusic(volume); 
+}
+
 Audio::~Audio() {
 	Mix_FreeMusic(ptr_mus);
 }
