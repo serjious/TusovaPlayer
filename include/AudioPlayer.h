@@ -34,6 +34,7 @@ public:
     void Loop()   { loop = true; }
     void Unloop() { loop = false; }
     bool IsLoop() { return loop; }
+    bool End()    { return end; }
     size_t Len()  { return len; }
 private:
     AudioPlayer(const AudioPlayer&) {}
