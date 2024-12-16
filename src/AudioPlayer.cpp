@@ -3,6 +3,8 @@
 
 void dir_scan(const char* path, AudioPlayer& obj);
 
+AudioPlayer a_pl;
+
 AudioPlayer::~AudioPlayer()
 {
 	while(last) {
@@ -29,6 +31,8 @@ void AudioPlayer::Next()
         cur = first;
     else
         end = true;
+    if(!end)
+        cur->audio.Play();
 }
 
 void AudioPlayer::Prev()
@@ -39,6 +43,8 @@ void AudioPlayer::Prev()
         cur = first;
     else
         end = true;
+    if(!end)
+        cur->audio.Play();
 }
 
 void AudioPlayer::SetVolume(int a_volume)

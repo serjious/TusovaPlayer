@@ -1,7 +1,19 @@
 #include "AudioPlayer.h"
 #include "dir_scan.h"
+#include "TusovaPlayer.h"
 
 
+int main(int argc, char* argv[])
+{
+    if(argc < 1)
+        return 1;
+
+    if(init_audio() == -1)
+        return 2;
+
+    return run(argv[1]);
+}
+/*
 int main(int argc, char* argv[])
 {
     if(argc < 1)
@@ -68,3 +80,4 @@ int main(int argc, char* argv[])
      
     return 0;
 }
+*/

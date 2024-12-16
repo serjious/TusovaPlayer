@@ -7,13 +7,16 @@ set(HEADERS
             include/Audio.h
             include/AudioPlayer.h
             include/dir_scan.h
-            include/dirent_win32.h)
+            include/dirent_win32.h
+            include/OOFLButton.h
+            include/TusovaPlayer.h)
 
 set(SOURCES 
             src/main.cpp
             src/Audio.cpp
             src/AudioPlayer.cpp
-            src/dir_scan.cpp)
+            src/dir_scan.cpp
+            src/TusovaPlayer.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
@@ -22,4 +25,4 @@ if(MINGW)
 endif(MINGW)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
-target_link_libraries(${PROJECT_NAME} SDL2main SDL2 SDL2_mixer)
+target_link_libraries(${PROJECT_NAME} SDL2main SDL2 SDL2_mixer fltk)
