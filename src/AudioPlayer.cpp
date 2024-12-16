@@ -49,6 +49,7 @@ void AudioPlayer::Prev()
 
 void AudioPlayer::SetVolume(int a_volume)
 {
+    printf("Change volume: %d\n", a_volume);
     volume = a_volume;
     Item* tmp = cur;
     while(tmp->next) {

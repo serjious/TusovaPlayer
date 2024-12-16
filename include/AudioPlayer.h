@@ -24,8 +24,7 @@ public:
         , loop(0)
         , end(0)
         , volume(64)
-        , len(0)
-    {}
+        , len(0) {}
     ~AudioPlayer();
     Audio& Get() { return cur->audio; }
     void Add(const char* path);

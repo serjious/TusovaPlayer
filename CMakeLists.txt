@@ -9,7 +9,9 @@ set(HEADERS
             include/dir_scan.h
             include/dirent_win32.h
             include/OOFLButton.h
-            include/TusovaPlayer.h)
+            include/OOFLRoller.h
+            include/TusovaPlayer.h
+            include/OOFLHor_Nice_Slider.h)
 
 set(SOURCES 
             src/main.cpp
