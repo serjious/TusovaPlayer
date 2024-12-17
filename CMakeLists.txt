@@ -3,6 +3,8 @@ set(PROJECT_NAME tusovaplayer)
 project(${PROJECT_NAME} LANGUAGES CXX)
 message("Using ${CMAKE_CXX_COMPILER_ID} compiler")
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 set(HEADERS
             include/Audio.h
             include/AudioPlayer.h
@@ -27,4 +29,5 @@ if(MINGW)
 endif(MINGW)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
-target_link_libraries(${PROJECT_NAME} SDL2main SDL2 SDL2_mixer fltk)
+target_link_libraries(${PROJECT_NAME} SDL2main SDL2 SDL2_mixer fltk
+                      fltk_images.so)

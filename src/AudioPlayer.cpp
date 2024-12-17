@@ -25,6 +25,8 @@ void AudioPlayer::Add(const char* path)
     
 void AudioPlayer::Next()
 {
+    if(Len() == 0)
+        return; 
     if(cur->next)
         cur = cur->next;
     else if(loop)
@@ -37,6 +39,8 @@ void AudioPlayer::Next()
 
 void AudioPlayer::Prev()
 {
+    if(Len() == 0)
+        return;
     if(cur->prev)
         cur = cur->prev;
     else if(loop)
@@ -83,3 +87,4 @@ void AudioPlayer::Push(const char* path)
     }
     len++;
 }
+

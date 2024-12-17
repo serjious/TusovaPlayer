@@ -3,6 +3,7 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Output.H>
 #include "OOFLButton.h"
 #include "OOFLRoller.h"
 #include "OOFLHor_Nice_Slider.h"
@@ -52,13 +53,21 @@ enum {
 };
 
 enum {
-    bar_w = 240,
+    bar_w = 220,
     bar_h = 20 
 };
 
+enum {
+    time_w = 45,
+    time_h = 20,
+    time_size = 6
+};
+
 const static double rol_step = 0.01;
-const static double rol_value = 0.01;
-const static double play_bar_timeout = 0.01;
+const static double rol_value = 0.5;
+const static double bar_timeout = 0.01;
+const static double time_timeout = 0.1;
+
 
 class PlayButton : public OOFLButton {
 public:
@@ -105,9 +114,33 @@ public:
         { a_pl.Get().SetPosition(value()*a_pl.Get().Duration()); }
     static void UpdateCallback(void* bar);
 private:
-    void update()
-        { value(a_pl.Get().GetPosition()/a_pl.Get().Duration()); }
+    double Update();
 };
+
+class Time : public Fl_Output {
+    // "00:00\0"
+    char time[time_size];
+public:
+    double r_time;
+    Time(int x, int y)
+        : Fl_Output(x, y, time_w, time_h)
+        , time("00:00"), r_time(0.0)
+        { value(time); }
+    ~Time() {}
+    static void UpdateCallback(void* t);
+    virtual void Set() { printf("hell\n"); }
+private:
+    void Update();
+    void SetTime();
+};
+
+class TimePosition : public Time {
+public:
+    TimePosition(int x, int y)
+        : Time(x, y) {}
+    virtual Set() { r_time = a_pl.Get().GetPosition(); }
+};
+
 
 int run(const char* path);
 
