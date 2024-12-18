@@ -53,6 +53,9 @@ void AudioPlayer::Prev()
 
 void AudioPlayer::SetVolume(int a_volume)
 {
+    volume = a_volume;
+    Mix_VolumeMusic(a_volume);
+    /*
     printf("Change volume: %d\n", a_volume);
     volume = a_volume;
     Item* tmp = cur;
@@ -66,6 +69,7 @@ void AudioPlayer::SetVolume(int a_volume)
             tmp->audio.SetVolume(a_volume);
             tmp = tmp->prev;
         }
+    */
 }
 
 void AudioPlayer::Push(const char* path)

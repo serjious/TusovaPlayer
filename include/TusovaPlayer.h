@@ -48,13 +48,13 @@ enum {
     rol_w = 100,
     rol_h = 25,
     rol_min = 0,
-    rol_max = 1, 
+    rol_max = 1,
     vol_max = 128
 };
 
 enum {
     bar_w = 220,
-    bar_h = 20 
+    bar_h = 20
 };
 
 enum {
@@ -138,7 +138,14 @@ class TimePosition : public Time {
 public:
     TimePosition(int x, int y)
         : Time(x, y) {}
-    virtual Set() { r_time = a_pl.Get().GetPosition(); }
+    virtual void Set() { r_time = a_pl.Get().GetPosition(); }
+};
+
+class TimeDuration : public Time {
+public:
+    TimeDuration(int x, int y)
+        : Time(x, y) {}
+    virtual void Set() { r_time = a_pl.Get().Duration(); }
 };
 
 

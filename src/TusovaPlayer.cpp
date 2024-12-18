@@ -24,7 +24,7 @@ PlayBar::PlayBar(int x, int y)
 void PlayBar::UpdateCallback(void* bar)
 {
     double t = static_cast<PlayBar*>(bar)->Update();
-    if(t == rol_max) 
+    if(t == rol_max)
         a_pl.Next();
     Fl::repeat_timeout(bar_timeout, UpdateCallback, bar);
 }
@@ -68,7 +68,8 @@ int run(const char* path)
     new LoopButton(spacing * 4 + but_w * 3, but_h * 2);
     new VolumeRoller(but_w * 5, but_h * 2);
     TimePosition *f_t = new TimePosition(spacing, spacing * 2);
-    PlayBar *bar = new PlayBar((win_w-bar_w) / 2, spacing * 2);
+    TimeDuration *l_t = new TimeDuration(win_w - time_w - spacing, spacing * 2);
+    PlayBar *bar = new PlayBar((win_w - bar_w) / 2, spacing * 2);
     if(a_pl.Len() > 0)
         but->OnPress();
     Fl_PNG_Image *img = new Fl_PNG_Image(title_img);
@@ -76,6 +77,7 @@ int run(const char* path)
     win->icon(img);
     win->show();
     Fl::add_timeout(bar_timeout, PlayBar::UpdateCallback, bar);
-    Fl::add_timeout(time_timeout, Time::UpdateCallback, f_t);
+    Fl::add_timeout(time_timeout, TimePosition::UpdateCallback, f_t);
+    Fl::add_timeout(time_timeout, TimeDuration::UpdateCallback, l_t);
     return Fl::run();
 }
