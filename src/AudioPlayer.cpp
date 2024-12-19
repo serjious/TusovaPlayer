@@ -49,12 +49,16 @@ void AudioPlayer::Next()
 
 void AudioPlayer::Prev()
 {
-    if(Len() == 0)
-        return;
-    if(cur->prev)
+    if(!cur)
+        throw EmptyListError();
+    if(cur->prev) {
         cur = cur->prev;
-    else if(loop)
+        cur->audio.Play();
+    }
+    else if(loop) {
         cur = first;
+        cur->audio.Play();
+    }
     else
         end = true;
     if(!end)
