@@ -13,13 +13,16 @@ set(HEADERS
             include/OOFLButton.h
             include/OOFLRoller.h
             include/TusovaPlayer.h
-            include/OOFLHor_Nice_Slider.h)
+            include/OOFLHor_Nice_Slider.h
+            include/Error.h
+            include/OOFLTime.h)
 
-set(SOURCES 
+set(SOURCES
             src/main.cpp
             src/Audio.cpp
             src/AudioPlayer.cpp
             src/dir_scan.cpp
+            src/OOFLTime.cpp
             src/TusovaPlayer.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

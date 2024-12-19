@@ -7,10 +7,9 @@
 #include <dirent.h>
 #endif
 #include "dir_scan.h"
-#include "AudioPlayer.h"
 
 
-static const char* music_types[]{
+static const char* music_types[] {
     ".mp3",   ".MP3",
     ".wav",   ".WAV",
     ".ogg",   ".OGG",
@@ -45,7 +44,7 @@ static void rec_dir_scan(const char* dir_name, AudioPlayer& obj)
     dirent* entry;
     int n = scandir(dir_name, &namelist, NULL, alphasort);
     if(n == -1)
-        //error handling
+        //error handler
         return;
     for(int i = 0; i < n; i++) {
         char path[PATH_MAX];
@@ -54,7 +53,7 @@ static void rec_dir_scan(const char* dir_name, AudioPlayer& obj)
             if(strcmp(entry->d_name, "..") != 0 &&
                strcmp(entry->d_name, ".") != 0) {
                 snprintf(path, PATH_MAX, "%s/%s", dir_name, entry->d_name);
-                rec_dir_scan(path, obj); 
+                rec_dir_scan(path, obj);
             }
         } else {
             if(is_music(entry->d_name)) {
@@ -70,7 +69,7 @@ static void rec_dir_scan(const char* dir_name, AudioPlayer& obj)
 
 void dir_scan(const char* path, AudioPlayer& obj)
 {
-    char upd_dir_name[PATH_MAX]; 
+    char upd_dir_name[PATH_MAX];
     strncpy(upd_dir_name, path, PATH_MAX);
     // /home/user/ <- delete last slash
     for(char* tmp = upd_dir_name; *tmp; tmp++) {

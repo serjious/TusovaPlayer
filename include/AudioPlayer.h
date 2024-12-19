@@ -14,19 +14,13 @@ class AudioPlayer {
     Item* cur;
     bool loop;
     bool end;
-    int volume;
     size_t len;
 public:
     AudioPlayer()
-        : first(0)
-        , last(0)
-        , cur(0)
-        , loop(0)
-        , end(0)
-        , volume(64)
-        , len(0) {}
+        : first(0), last(0), cur(0)
+        , loop(0), end(1), len(0) {}
     ~AudioPlayer();
-    Audio& Get() { return cur->audio; }
+    Audio& Get();
     void Add(const char* path);
     void Next();
     void Prev();

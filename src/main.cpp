@@ -1,17 +1,14 @@
 #include "AudioPlayer.h"
-#include "dir_scan.h"
 #include "TusovaPlayer.h"
 
 
 int main(int argc, char* argv[])
 {
-    if(argc < 1)
-        return 1;
-
-    if(init_audio() == -1)
+    if(Audio::InitAudio() == -1)
         return 2;
 
-    return run(argv[1]);
+    MainWindow* win = new MainWindow(argc, argv);
+    return win->Run();
 }
 /*
 int main(int argc, char* argv[])
@@ -28,19 +25,19 @@ int main(int argc, char* argv[])
         if(argv[i] && (is_music(argv[i]) || is_directory(argv[i])))
             a_pl.Add(argv[i]);
     }
-    
+
     if(a_pl.Len() == 0)
         return 3;
-    
-    a_pl.Get().Play(); 
-    
+
+    a_pl.Get().Play();
+
     int c;
     while((c = getchar()) != EOF) {
         switch(c) {
         case 'p':
             if(a_pl.Get().Paused())
                 a_pl.Get().Resume();
-            else 
+            else
                 a_pl.Get().Pause();
             break;
         case 'n':
@@ -77,7 +74,7 @@ int main(int argc, char* argv[])
         }
     }
 
-     
+
     return 0;
 }
 */

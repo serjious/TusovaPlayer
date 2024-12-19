@@ -3,7 +3,7 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
-#include <FL/Fl_Output.H>
+#include "OOFLTime.h"
 #include "OOFLButton.h"
 #include "OOFLRoller.h"
 #include "OOFLHor_Nice_Slider.h"
@@ -13,33 +13,37 @@
 enum msg_key {
     key_title,
     key_play,
+    key_pause,
     key_prev,
     key_next,
     key_loop,
+    key_unloop,
     key_vol
 };
 
 static const char* msg_arr[] = {
     "TusovaPlayer",
     "Play",
+    "Pause",
     "Prev",
     "Next",
     "Loop",
+    "Unloop",
     "Volume"
 };
 
 extern AudioPlayer a_pl;
 
 enum {
-    pos_x = 0,
-    pos_y = 0,
-    win_w = 340,
+    pos_x = 2600,
+    pos_y = 430,
+    win_w = 380,
     win_h = 120
 };
 
 enum {
     spacing = 5,
-    but_w = 30,
+    but_w = 35,
     but_h = 30,
     font_size = 10
 };
@@ -58,23 +62,37 @@ enum {
 };
 
 enum {
-    time_w = 45,
+    time_w = 62,
     time_h = 20,
-    time_size = 6
 };
 
 const static double rol_step = 0.01;
 const static double rol_value = 0.5;
 const static double bar_timeout = 0.01;
-const static double time_timeout = 0.1;
+const static double win_timeout = 0.25;
 
+
+
+class MainWindow : public Fl_Window{
+    bool can_upd;
+public:
+    MainWindow(int argc, char* argv[])
+        : Fl_Window(pos_x, pos_y, win_w, win_h, msg_arr[key_title])
+        , can_upd(0)
+        { Logic(argc, argv); }
+    int Run() { return Fl::run(); }
+    static void UpdateCallback(void* w);
+private:
+    void Logic(int argc, char* argv[]);
+    void Update() { label(a_pl.Get().Title()); }
+};
 
 class PlayButton : public OOFLButton {
 public:
     PlayButton(int x, int y)
-        : OOFLButton(x, y, but_w, but_h, msg_arr[key_play])
+        : OOFLButton(x, y, but_w, but_h, msg_arr[key_pause])
         { labelsize(font_size); }
-    virtual void OnPress() { a_pl.Get().Play(); }
+    virtual void OnPress();
 };
 
 class PrevButton : public OOFLButton {
@@ -98,57 +116,45 @@ public:
     LoopButton(int x, int y)
         : OOFLButton(x, y, but_w, but_h, msg_arr[key_loop])
         { labelsize(font_size); }
-    virtual void OnPress() { a_pl.Loop(); }
+    virtual void OnPress();
 };
 
 class VolumeRoller : public OOFLRoller {
 public:
-    VolumeRoller(int x, int y);
+    VolumeRoller(int x, int y)
+        : OOFLRoller(x, y, rol_w, rol_h, msg_arr[key_vol])
+        { Logic(); }
     virtual void OnRoll() { a_pl.SetVolume((int)(value()*vol_max)); }
+private:
+    void Logic();
 };
 
 class PlayBar : public OOFLHor_Nice_Slider {
 public:
-    PlayBar(int x, int y);
+    PlayBar(int x, int y)
+        : OOFLHor_Nice_Slider(x, y, bar_w, bar_h)
+        { Logic(); }
     virtual void OnPress()
         { a_pl.Get().SetPosition(value()*a_pl.Get().Duration()); }
     static void UpdateCallback(void* bar);
 private:
     double Update();
+    void Logic();
 };
 
-class Time : public Fl_Output {
-    // "00:00\0"
-    char time[time_size];
-public:
-    double r_time;
-    Time(int x, int y)
-        : Fl_Output(x, y, time_w, time_h)
-        , time("00:00"), r_time(0.0)
-        { value(time); }
-    ~Time() {}
-    static void UpdateCallback(void* t);
-    virtual void Set() { printf("hell\n"); }
-private:
-    void Update();
-    void SetTime();
-};
 
-class TimePosition : public Time {
+class TimePosition : public OOFLTime {
 public:
     TimePosition(int x, int y)
-        : Time(x, y) {}
-    virtual void Set() { r_time = a_pl.Get().GetPosition(); }
+        : OOFLTime(x, y, time_w, time_h) {}
+    virtual void Set() { RTime(a_pl.Get().GetPosition()); }
 };
 
-class TimeDuration : public Time {
+class TimeDuration : public OOFLTime {
 public:
     TimeDuration(int x, int y)
-        : Time(x, y) {}
-    virtual void Set() { r_time = a_pl.Get().Duration(); }
+        : OOFLTime(x, y, time_w, time_h) {}
+    virtual void Set() { RTime(a_pl.Get().Duration()); }
 };
-
-
-int run(const char* path);
 
 #endif

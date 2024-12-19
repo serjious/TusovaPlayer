@@ -1,10 +1,10 @@
 #include <FL/Fl_PNG_Image.H>
 #include "TusovaPlayer.h"
+#include "Error.h"
 
 static const char* title_img = "title.png";
 
-VolumeRoller::VolumeRoller(int x, int y)
-: OOFLRoller(x, y, rol_w, rol_h, msg_arr[key_vol])
+void VolumeRoller::Logic()
 {
         bounds(rol_min, rol_max);
         value(rol_value);
@@ -13,8 +13,30 @@ VolumeRoller::VolumeRoller(int x, int y)
         do_callback();
 }
 
-PlayBar::PlayBar(int x, int y)
-: OOFLHor_Nice_Slider(x, y, bar_w, bar_h)
+void PlayButton::OnPress()
+{
+    if(a_pl.Get().Paused()) {
+        a_pl.Get().Resume();
+        label(msg_arr[key_pause]);
+    } else {
+        a_pl.Get().Pause();
+        label(msg_arr[key_play]);
+    }
+}
+
+void LoopButton::OnPress()
+{
+    printf("%d\n", a_pl.IsLoop());
+    if(a_pl.IsLoop()) {
+        a_pl.Unloop();
+        label(msg_arr[key_unloop]);
+    } else {
+        a_pl.Loop();
+        label(msg_arr[key_loop]);
+    }
+}
+
+void PlayBar::Logic()
 {
 	bounds(rol_min, rol_max);
 	value(0);
@@ -36,48 +58,46 @@ double PlayBar::Update()
     return t;
 }
 
-void Time::UpdateCallback(void* t)
+void MainWindow::Logic(int argc, char* argv[])
 {
-    static_cast<Time*>(t)->Update();
-    Fl::repeat_timeout(time_timeout, UpdateCallback, t);
-}
+    if(argc > 1)
+        for(int i = 1; i < argc; i++)
+            a_pl.Add(argv[i]);
+    try {
+        a_pl.Get().Play();
+        can_upd = 1;
+    }
+    catch(const EmptyListError& a)
+    {
+        printf("%s\n", a.What());
+        exit(1);
+    }
 
-void Time::Update()
-{
-    Set();
-    SetTime();
-    value(time);
-}
-
-void Time::SetTime()
-{
-    int min = ((int)r_time / 60) % 60;
-    int sec = (int)r_time % 60;
-    snprintf(time, time_size, "%02d:%02d", min, sec);
-}
-
-int run(const char* path)
-{
-    //a_pl.Loop();
-    a_pl.Add(path);
-    Fl_Window* win = new Fl_Window(pos_x, pos_y, win_w,
-                                   win_h, msg_arr[key_title]);
     PlayButton* but = new PlayButton(spacing, but_h * 2);
     new PrevButton(spacing * 2 + but_w, but_h * 2);
     new NextButton(spacing * 3 + but_w * 2, but_h * 2);
     new LoopButton(spacing * 4 + but_w * 3, but_h * 2);
     new VolumeRoller(but_w * 5, but_h * 2);
-    TimePosition *f_t = new TimePosition(spacing, spacing * 2);
-    TimeDuration *l_t = new TimeDuration(win_w - time_w - spacing, spacing * 2);
+    TimePosition *pos_t = new TimePosition(spacing, spacing * 2);
+    TimeDuration *dur_t = new TimeDuration(win_w - time_w - spacing, spacing * 2);
     PlayBar *bar = new PlayBar((win_w - bar_w) / 2, spacing * 2);
-    if(a_pl.Len() > 0)
-        but->OnPress();
     Fl_PNG_Image *img = new Fl_PNG_Image(title_img);
-    win->end();
-    win->icon(img);
-    win->show();
+    end();
+    icon(img);
+    show();
     Fl::add_timeout(bar_timeout, PlayBar::UpdateCallback, bar);
-    Fl::add_timeout(time_timeout, TimePosition::UpdateCallback, f_t);
-    Fl::add_timeout(time_timeout, TimeDuration::UpdateCallback, l_t);
-    return Fl::run();
+    Fl::add_timeout(time_timeout, TimePosition::UpdateCallback, pos_t);
+    Fl::add_timeout(time_timeout, TimeDuration::UpdateCallback, dur_t);
+    Fl::add_timeout(win_timeout, MainWindow::UpdateCallback, this);
 }
+
+void MainWindow::UpdateCallback(void* w)
+{
+    MainWindow *win = static_cast<MainWindow*>(w);
+    if(win->can_upd) {
+        win->Update();
+        Fl::repeat_timeout(win_timeout, UpdateCallback, w);
+    }
+}
+
+

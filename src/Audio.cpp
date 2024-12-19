@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include "Audio.h"
 
-int init_audio()
+int Audio::InitAudio()
 {
 	int init;
     init = SDL_Init(SDL_INIT_AUDIO);
@@ -28,13 +28,23 @@ Audio::~Audio() {
 
 void Audio::Load(const char* a_path)
 {
-    const char* a_name = a_path + strlen(a_path);
-    for( ; a_name > a_path; a_name--) {
-        if(*a_name == '\\' || *a_name == '/') {
-            a_name++;
-            break;
+    const char* title = Mix_GetMusicTitle(ptr_mus);
+    if(*title) {
+        strcpy(name, title);
+    } else {
+        const char* a_name = a_path + strlen(a_path);
+        for( ; a_name > a_path; a_name--) {
+            if(*a_name == '\\' || *a_name == '/') {
+                a_name++;
+                break;
+            }
         }
+        strcpy(name, a_name);
+        for(int i = name_size - 1; i >= 0; i--)
+            if(name[i] == '.')
+                name[i] = '\0';
     }
+
     ptr_mus = Mix_LoadMUS(a_path);
     if(!ptr_mus)
         printf("Mix_LoadMUS: %s\n", Mix_GetError());
@@ -45,7 +55,7 @@ void Audio::Play()
 	const int unloop = 1;
 	int st = Mix_PlayMusic(ptr_mus, unloop);
     printf("%s\n", Title());
-	if(st == -1)	
+	if(st == -1)
 		printf("Mix_PlayMusic: path: %s (%s)\n", Mix_GetError());
 }
 
@@ -61,46 +71,10 @@ void Audio::Stop() {
 	Mix_HaltMusic();
 }
 
-int Audio::SetVolume(int volume)
-{
-    // 0<=volume<=128
-    // -1 return currect volume
-    if(volume >= -1 && volume <= MIX_MAX_VOLUME)
-		return Mix_VolumeMusic(volume);
-    return 0;
-}
 
-void Audio::SetPosition(double pos) 
+void Audio::SetPosition(double pos)
 {
 	int st = Mix_SetMusicPosition(pos);
 	if(st == -1)
 		printf("SetPosition: path: %s (%s)\n", Mix_GetError());
-}
-
-double Audio::GetPosition() {
-	return Mix_GetMusicPosition(ptr_mus);
-}
-
-double Audio::Duration() {
-	return Mix_MusicDuration(ptr_mus);
-}
-
-const char* Audio::Title() {
-	return Mix_GetMusicTitle(ptr_mus);
-}
-
-const char* Audio::Artist() {
-	return Mix_GetMusicArtistTag(ptr_mus);
-}
-
-const char* Audio::Album() {
-	return Mix_GetMusicAlbumTag(ptr_mus);
-}
-
-const char* Audio::Copy() {
-	return Mix_GetMusicCopyrightTag(ptr_mus);
-}
-
-bool Audio::Paused() {
-	return Mix_PausedMusic();
 }
